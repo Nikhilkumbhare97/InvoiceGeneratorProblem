@@ -31,8 +31,8 @@ public class InvoiceServiceTest {
     @Test
     public void givenMultipleRides_ShouldReturnInvoiceSummary() {
         Ride[] rides = {
-                new Ride(2.0, 5),
-                new Ride(0.1, 1)
+                new Ride(2.0, 5, CabRide.NORMAL),
+                new Ride(0.1, 1, CabRide.NORMAL)
         };
         InvoiceSummary actualInvoiceSummary = invoiceGenerator.calculateFare(rides);
         InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 30.0);
@@ -43,13 +43,28 @@ public class InvoiceServiceTest {
     public void givenUserIdAndRides_ShouldReturnInvoiceSummary() {
         String userId = "Nikhil";
         Ride[] rides = {
-                new Ride(2.0, 5),
-                new Ride(0.1, 1),
-                new Ride(1,2)
+                new Ride(2.0, 5, CabRide.NORMAL),
+                new Ride(0.1, 1, CabRide.NORMAL),
+                new Ride(1, 2, CabRide.NORMAL)
         };
         invoiceGenerator.addRides(userId, rides);
         InvoiceSummary actualInvoiceSummary = invoiceGenerator.getInvoiceSummary(userId);
-        InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(3,42.0);
+        InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(3, 42.0);
         Assertions.assertEquals(expectedInvoiceSummary, actualInvoiceSummary);
     }
+
+    @Test
+    public void givenUserIdAndRidesForTwoCategoriesRides_ShouldReturnInvoiceSummary() {
+        String userId = "Nikhil";
+        Ride[] rides = {
+                new Ride(2.0, 5, CabRide.NORMAL),
+                new Ride(0.1, 1, CabRide.PREMIUM),
+                new Ride(2, 2, CabRide.PREMIUM)
+        };
+        invoiceGenerator.addRides(userId, rides);
+        InvoiceSummary summary = invoiceGenerator.getInvoiceSummary(userId);
+        InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(3, 79);
+        Assertions.assertEquals(expectedInvoiceSummary, summary);
+    }
+
 }

@@ -11,10 +11,7 @@ public class RideRepository {
     }
 
     public void addRides(String userId, Ride[] rides) {
-        ArrayList<Ride> rideList = this.userRides.get(userId);
-        if (rideList == null) {
-            this.userRides.put(userId, new ArrayList<>(Arrays.asList(rides)));
-        }
+        this.userRides.computeIfAbsent(userId, k -> new ArrayList<>(Arrays.asList(rides)));
     }
 
     public Ride[] getRides(String userId) {
